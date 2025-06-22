@@ -19,6 +19,7 @@
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
+import gradio as gr
 
 # Load your API key
 load_dotenv()
@@ -28,14 +29,12 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-1.5-flash")
 chat = model.start_chat(history=[])
 
-print("Type 'exit' to quit.")
-
-while True:
-    user_input = input("You: ")
-    if user_input.lower() in ["exit", "quit"]:
-        break
+def chatwgemini(user_input,history=[]):
     try:
-        response = chat.send_message(user_input)
-        print("Bot:", response.text)
+        response=chat.send_message(user_input)
+        return response.text
     except Exception as e:
-        print("Error:", e)
+        return f" error : {str(e)}:"
+gr.ChatInterface(fn=chatwgemini,title="Jarvis").launch()
+
+
